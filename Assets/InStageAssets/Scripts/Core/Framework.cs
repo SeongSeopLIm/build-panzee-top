@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityCommunity;
 using UnityCommunity.UnitySingleton;
+using WAK.Managers;
 
 namespace WAK.Core
 {
@@ -28,6 +29,9 @@ namespace WAK.Core
             Managers.SceneManager.CreateInstance(); 
             #endregion 
         }
+
+
+         
     }
 
 }

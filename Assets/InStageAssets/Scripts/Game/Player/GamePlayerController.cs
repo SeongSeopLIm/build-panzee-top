@@ -1,6 +1,8 @@
 
 
+using UnityEngine;
 using WAK.Game;
+using WAK.Managers;
 
 public class GamePlayerController : PlayerControllerBase
 {
@@ -14,6 +16,8 @@ public class GamePlayerController : PlayerControllerBase
     {
         // 여기에 동물 스폰
 
-        InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Wait>(this));
+        //InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Wait>(this));
+
+        GameManager.Instance.SpawnAnimal(Vector2.zero);
     }
 }

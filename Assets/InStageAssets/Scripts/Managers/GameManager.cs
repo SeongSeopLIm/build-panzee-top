@@ -2,16 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityCommunity.UnitySingleton;
+using WAK.Game; 
 
 namespace WAK.Managers
 {
-    public class GameManager : MonoSingleton<SceneManager>
-    { 
 
+    public class GameManager : MonoSingleton<GameManager>
+    {
 
-        public void Set()
+        [SerializeField] private GamePlaySettings gamePlaySettings;
+
+        public void Set(GamePlaySettings gamePlaySettings)
         {
-
+            this.gamePlaySettings = gamePlaySettings;
         }
 
         public void Clear()
@@ -19,8 +22,22 @@ namespace WAK.Managers
 
         }
 
+        public void Play()
+        {
+
+        }
+
+
         public void SpawnAnimal(Vector2 screenPos)
         {
+            var objectParams = new ObjectManager.ObjectParams()
+            {
+                dataKey = 0
+            };
+
+
+            var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams);
+
 
         }
          

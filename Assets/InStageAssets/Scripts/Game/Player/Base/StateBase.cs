@@ -23,7 +23,7 @@ namespace WAK.Game
         public virtual void OnRelease() { }
 
 
-        private static Dictionary<string, StateBase> statesByName;
+        private static Dictionary<string, StateBase> statesByName = new();
         public static StateBase GetOrCreate<T2>(PlayerControllerBase controller) where T2 : StateBase
         {
             string key = typeof(T2).Name;

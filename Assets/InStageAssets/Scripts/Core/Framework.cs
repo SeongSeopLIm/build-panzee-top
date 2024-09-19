@@ -15,6 +15,9 @@ namespace WAK.Core
             PreloadSingletons();
         }
 
+        /// <summary>
+        /// ΩÃ±€≈Ê ∏≈¥œ¿˙ πÃ∏Æ ∑ŒµÂ. « ø‰«— ΩÃ±€≈Ê∏∏ √ﬂ∞°.
+        /// </summary>
         private void PreloadSingletons()
         { 
             #region Singleton
@@ -22,13 +25,8 @@ namespace WAK.Core
             #endregion
 
             #region PersistentMonoSingleton
-            Managers.SceneManager.CreateInstance();
-            Managers.InputManger.CreateInstance();
-            #endregion
-
-            #region PersistentMonoSingleton
-
-            #endregion
+            Managers.SceneManager.CreateInstance(); 
+            #endregion 
         }
     }
 

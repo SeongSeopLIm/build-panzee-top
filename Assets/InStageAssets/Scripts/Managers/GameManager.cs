@@ -4,13 +4,15 @@ using UnityEngine;
 using UnityCommunity.UnitySingleton;
 using WAK.Game;
 using UnityEngine.InputSystem;
+using UnityEditor.ShaderGraph;
 namespace WAK.Managers
 {
 
     public class GameManager : MonoSingleton<GameManager>
     {
         public GameSettings GameSettings{ get; private set; }
-        public GamePlayerController PlayerController {  get; private set; }
+        public GamePlayerController PlayerController { get; private set; }
+        public MainControl MainControls { get; private set; } 
 
         public Camera MainCamera => player.PlayerCamera;
 
@@ -29,7 +31,12 @@ namespace WAK.Managers
             Clear();
             this.GameSettings = gameSettings;
             this.PlayerController = playerController;
-            
+            if(MainControls == null)
+            {
+                MainControls = new MainControl();
+                MainControls.play.Enable();
+            }
+
             PlayerController.Initalize();
             var world = Instantiate(GameSettings.WorldPrefab, transform);
             Instantiate(GameSettings.PlayerPrefab, world.transform).TryGetComponent<Player>(out player); 
@@ -47,6 +54,10 @@ namespace WAK.Managers
             if(player)
             {
                 Destroy(player.gameObject);
+            }
+            if(MainControls != null)
+            {
+                MainControls.RemoveAllBindingOverrides();
             }
         }
 
@@ -67,9 +78,13 @@ namespace WAK.Managers
 
         public void SpawnRandomAndHold(Vector2 screenPos)
         {
+            var maxCount = GameSettings.SpawnBundleSettings.SpawnPrefabs.Count;
+            var idx = Random.Range(0, maxCount);
+
             var objectParams = new ObjectManager.ObjectParams()
             {
-                dataKey = 0
+                dataKey = idx, 
+                poolID = GameSettings.SpawnBundleSettings.SpawnPrefabs[idx].name // 프리팹 이름 겹치지 않게 주의
             }; 
 
             var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams);
@@ -114,6 +129,7 @@ namespace WAK.Managers
             worldPos.z = 0;
             return worldPos;
         }
+         
     }
 }
 

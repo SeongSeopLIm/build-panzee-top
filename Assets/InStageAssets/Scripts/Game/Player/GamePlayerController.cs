@@ -5,7 +5,7 @@ using WAK.Game;
 using WAK.Managers;
 
 public class GamePlayerController : PlayerControllerBase
-{
+{ 
 
     public override void Initalize()
     {

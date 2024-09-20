@@ -10,14 +10,14 @@ namespace WAK
         /// <summary>
         /// ObjectPool 그룹별 유니크 이름.
         /// </summary>
-        public string PoolID { get; }
+        public string ActorID { get; }
         public string PrefabPath { get; }
 
-        /// <param name="poolType">유니크한 이름 지정 Pool 관리에 사용됨.</param>
+        /// <param name="actorID">유니크한 이름 지정 </param>
         /// <param name="prefabRelativePath">Constants.ACTOR_RELATIVE_PATH 하위 path 지정</param> 
-        public ActorImplAttribute(string poolType, string prefabRelativePath)
+        public ActorImplAttribute(string actorID, string prefabRelativePath)
         {
-            PoolID = poolType;
+            ActorID = actorID;
             PrefabPath = $"{Constants.ACTOR_RELATIVE_PATH}/prefabRelativePath";
         }
     }

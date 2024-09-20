@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1cc7d058ff3b224b96ee264d8d71029, type: 3}
   m_Name: SpawnBundleSettings
   m_EditorClassIdentifier: 
-  data: {fileID: 0}
   prefabFolderPath: Assets/Resources/Prefabs/Actors/SpawnObjects
   spawnPrefabs:
   - {fileID: 412656860345265935, guid: ea0e87ffa4c07e841b9cfe9c94b99f9f, type: 3}

@@ -15,12 +15,14 @@ namespace WAK.Game
         {
             base.Enter();
             Debug.Log("InputState_Play Entered");
+            GameManager.Instance.MainControls.play.SetCallbacks(this);
         }
 
         public override void Exit()
         {
-            base.Exit();
+            GameManager.Instance.MainControls.play.RemoveCallbacks(this);
             Debug.Log("InputState_Play Exited");
+            base.Exit();
         }
 
         public override void Update()
@@ -30,7 +32,7 @@ namespace WAK.Game
         }
 
         public void OnTap(InputAction.CallbackContext context)
-        {
+        { 
             if (context.performed)
             {
                 Debug.Log("Tap action performed ");

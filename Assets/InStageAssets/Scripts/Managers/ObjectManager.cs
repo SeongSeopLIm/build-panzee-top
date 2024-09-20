@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Pool;
 using WAK.Game;
+using WAK.Managers;
 
 namespace WAK
 {
@@ -21,23 +22,18 @@ namespace WAK
 		/// 초기화에 사용될 오브젝트 파라미터. 추상적인 값이니, 보편벅인 값알 넣고 구현할 때 알아서 사용.
 		/// </summary>
 		public struct ObjectParams
-		{
-			public int dataKey;
-		}
+        {
+            public int dataKey;
+            public string poolID;
+        }
 
         public ActorType Spawn<ActorType>(ObjectParams objectParams) where ActorType : ActorImpl, new()
-		{
-			string implID = GetActorID<ActorType>();
-			if (string.IsNullOrEmpty(implID))
-			{
-				Debug.LogError($"ActorAttribute 누락 : {typeof(ActorType).Name}");
-				return null;
-			}
+		{  
 
-			if (!pools.ContainsKey(implID))
+			if (!pools.ContainsKey(objectParams.poolID))
 			{
-				pools[implID] = new ObjectPool<Actor>(
-					createFunc: () => { return CreateNewActor<ActorType>(); },
+				pools[objectParams.poolID] = new ObjectPool<Actor>(
+					createFunc: () => { return CreateNewActor<ActorType>(objectParams); },
 					actionOnGet: (arg1) => { OnGetActor(arg1, objectParams); },
 					actionOnRelease: OnReleaseActor,
 					actionOnDestroy: DestroyActor,
@@ -47,11 +43,11 @@ namespace WAK
 				);
 			}
 
-			Actor actorInstance = pools[implID].Get();  
+			Actor actorInstance = pools[objectParams.poolID].Get();  
 
 			if (actorInstance == null)
 			{
-				Debug.LogError($"인스턴스 생성 실패 ID: {implID}");
+				Debug.LogError($"인스턴스 생성 실패 ID: {objectParams.poolID}");
 				return null;
 			}
 
@@ -67,7 +63,7 @@ namespace WAK
                 return;
             }
 
-			string poolID = GetActorPoolID(actorImpl.GetType());
+			string poolID = actorImpl.ObjectParams.poolID;
 			if (string.IsNullOrEmpty(poolID))
 			{
 				Debug.LogError($"ActorAttribute 누락 : {actor.GetType().Name}");
@@ -106,15 +102,19 @@ namespace WAK
 			return prefabObject.TryGetComponent<Actor>(out prefab);
 		}
 
-		private Actor CreateNewActor<T>() where T : ActorImpl
+		private Actor CreateNewActor<T>(ObjectParams objectParams) where T : ActorImpl
         {
+			/* 프리팹 - 스크립트 대응되는 구조가 아니라서 없는 게 맞을 듯.
 			if (TryGetActorPrefab<T>(out Actor actorPrefab))
 			{
 				Debug.LogError($"Cannot find prefab : {nameof(T)}");
 				return null;
 			}
+			*/
 
-			GameObject actorGO = GameObject.Instantiate(actorPrefab.gameObject);
+			var prefab = GameManager.Instance.GameSettings.SpawnBundleSettings.SpawnPrefabs[objectParams.dataKey];
+
+            GameObject actorGO = GameObject.Instantiate(prefab);
 			Actor actor = actorGO.GetComponent<Actor>();
 			if (actor == null)
 			{ 
@@ -126,7 +126,7 @@ namespace WAK
             actor.OnCreated(impl); 
 
             actor.gameObject.SetActive(false);
-			return actorPrefab;
+			return actor;
 		}
 
 		private void OnGetActor(Actor actor, ObjectParams objectParams)
@@ -155,18 +155,5 @@ namespace WAK
             GameObject.Destroy(actor.gameObject);
 		}
 
-		private string GetActorID<T>() where T : ActorImpl
-		{
-			Type type = typeof(T);
-			// REVIEW : 이런 식으로 Attribue 쓰면 느리지만, 일단 가벼운 게임이니 그냥 진행한다. 나중에 거슬리면 변경 
-			ActorImplAttribute attribute = type.GetCustomAttribute<ActorImplAttribute>();
-			return attribute?.PoolID;
-		}
-
-		private string GetActorPoolID(Type actorImplType)
-		{
-			ActorImplAttribute attribute = actorImplType.GetCustomAttribute<ActorImplAttribute>();
-			return attribute?.PoolID;
-		}
 	}
 }

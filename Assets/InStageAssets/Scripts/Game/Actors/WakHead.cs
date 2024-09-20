@@ -10,7 +10,8 @@ namespace WAK.Game
     /// <summary>
     /// 위치값을 갖는 월드상의 오브젝트 
     /// </summary>
-    [ActorImpl(poolType: "WakHead", prefabRelativePath: "/WakHead.prefab")]
+    [ActorImpl(actorID: "WakHead", prefabRelativePath: "/WakHead.prefab"),
+        RequireComponent(typeof(SpriteRenderer), typeof(PolygonCollider2D), typeof(Rigidbody2D))]
     public class WakHead : Actor
     {
         // rigidbody2D 이름이 안되는데 모징? 원래 그런 건가
@@ -33,6 +34,21 @@ namespace WAK.Game
             base.OnDespawn();
         }
 
+        private void Reset()
+        {
+            if(!_rigidbody2D)
+            {
+                gameObject.TryGetComponent<Rigidbody2D>(out _rigidbody2D);
+            }
+        }
+
+        private void OnValidate()
+        {
+            if (!_rigidbody2D)
+            {
+                gameObject.TryGetComponent<Rigidbody2D>(out _rigidbody2D);
+            }
+        }
 
         private void OnHoldToCursor(bool isHold)
         {

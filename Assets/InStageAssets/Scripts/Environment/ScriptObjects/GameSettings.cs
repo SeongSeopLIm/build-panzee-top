@@ -16,7 +16,7 @@ namespace WAK.Game
         [SerializeField] private GameObject player;
         public GameObject PlayerPrefab => player;
 
-        [SerializeField] private SpawnBundleSettings defaultPlaySettings;
-        public SpawnBundleSettings DefaultPlaySettings => defaultPlaySettings;
+        [SerializeField] private SpawnBundleSettings spawnBundleSettings;
+        public SpawnBundleSettings SpawnBundleSettings => spawnBundleSettings;
     }
 }

@@ -10,5 +10,6 @@
 
 - [UniRX](https://github.com/neuecc/UniRx)
 - [UniTask](https://github.com/Cysharp/UniTask)
+- [DoTween]
 
 

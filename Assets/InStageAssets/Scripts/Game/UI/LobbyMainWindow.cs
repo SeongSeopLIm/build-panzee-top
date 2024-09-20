@@ -9,13 +9,14 @@ namespace WAK.UI
 
     }
 
+    [UIView(id: nameof(LobbyMainWindow), path: "Prefabs/UI/LobbyMainWindow", dataType: typeof(LobbyMainWindowData))]
     public class LobbyMainWindow : Window
     {
         [SerializeField] private Button startBtn;
 
-        protected override void SetData(ViewData viewData)
+        protected override void OnSetData(ViewData viewData)
         {
-            base.SetData(viewData);
+            base.OnSetData(viewData);
         }
     }
 }

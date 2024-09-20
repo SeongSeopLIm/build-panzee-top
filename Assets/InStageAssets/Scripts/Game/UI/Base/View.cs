@@ -1,38 +1,46 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UniRx;
+using UnityEngine;
 using WAK.Managers;
 
 namespace WAK.UI
 {
-    public class UIViewAttribute : Attribute
+    public class UIViewAttribute: Attribute
     {
         public string ID { get; private set; }
         public string Path { get; private set; }
+        public Type DataType { get; private set; }
 
         // 필요없을 것 같긴 한데, 일단 추가.
         public bool IsSingleInstance { get; private set; }
-        public UIViewAttribute(string id, string path, bool isSingleInstance = true)
+        public UIViewAttribute(string id, string path, Type dataType, bool isSingleInstance = true)
         {
             this.ID = id;
-            this.Path = path;   
+            this.Path = path;
+            this.DataType = dataType;
             this.IsSingleInstance = isSingleInstance;   
         }
     }
 
-    internal interface IVisibleUpdater
+    /// <summary>
+    /// UIManager 핸들링 용도. 일반 클래스 사용 X 
+    /// </summary>
+    internal interface IViewHandler
     {
+        void Initialize(ViewData viewData);
+    } 
 
-        void RegiestTranslationToShow();
-        void RegiestTranslationToHide();
-
-        //void OnHide();
-        //void OnShow();
-        //void OnFinishedTranslationShow();
-        //void OnStartTranslationToHide();
+    internal interface IVisibleUpdater
+    { 
+        void Show();
+        void Hide();
+        void ShowWithAnimation(Tween showAnimation);
+        void HideWithAnimation(Tween hideAnimation);
     }
 
     /// <summary>
@@ -47,33 +55,47 @@ namespace WAK.UI
 
         #region UI view animation
 
-        public void OnFinishTranslationToShow()
+        private void OnFinishTranslationToShow()
         {
             state.Value = ViewState.Hidden;
         }
 
-        public void OnFinishTranslationToHide()
+        private void OnFinishTranslationToHide()
         {
             state.Value = ViewState.Show;
         }
-        public void OnStartTranslationToShow()
+        private void OnStartTranslationToShow()
         {
             state.Value = ViewState.StartTranslationToShow;
         }
 
-        public void OnStartTranslationToHide()
+        private void OnStartTranslationToHide()
         {
             state.Value = ViewState.StartTranslationToHide;
         }
 
-        void IVisibleUpdater.RegiestTranslationToShow()
-        {
-
+        void IVisibleUpdater.ShowWithAnimation(Tween showAnimation)
+        { 
+            showAnimation.OnStart(OnStartTranslationToShow);
+            showAnimation.OnComplete(OnFinishTranslationToShow);
+            showAnimation.Play();
         }
 
-        void IVisibleUpdater.RegiestTranslationToHide()
-        {
+        void IVisibleUpdater.HideWithAnimation(Tween hideAnimation)
+        { 
+            hideAnimation.OnStart(OnStartTranslationToHide);
+            hideAnimation.OnComplete(OnFinishTranslationToHide);
+            hideAnimation.Play();
+        }
 
+        void IVisibleUpdater.Show()
+        {
+            state.Value = ViewState.Show;
+        }
+
+        void IVisibleUpdater.Hide()
+        {
+            state.Value = ViewState.Hidden;
         }
         #endregion
     }
@@ -81,17 +103,29 @@ namespace WAK.UI
     /// <summary>
     /// Note : https://github.com/neuecc/UniRx - Model-View-(Reactive)Presenter Pattern
     /// </summary>
-    [UIView(id: "view", path: "UI/Window/View.prefab", isSingleInstance: false)]
-    public class View
+    [UIView(id: nameof(View), path: "Prefabs/UI/Window.prefab", dataType: typeof(ViewData),isSingleInstance: false)]
+    public class View : MonoBehaviour, IViewHandler
     { 
         protected ViewData viewData { get; private set; }
 
+        void IViewHandler.Initialize(ViewData viewData)
+        {
+            OnSetData(viewData);
+            OnInitilized();
+        }
 
-        protected virtual void SetData(ViewData viewData) 
+        /// <summary>
+        /// SetData 가 먼저 호출됨
+        /// </summary>
+        protected virtual void OnInitilized()
+        {
+
+        }
+
+        protected virtual void OnSetData(ViewData viewData) 
         {
             this.viewData = viewData;
         }
-
 
     }
 }

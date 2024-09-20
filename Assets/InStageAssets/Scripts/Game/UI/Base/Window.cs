@@ -12,12 +12,12 @@ namespace WAK.UI
 
     }
 
-    [UIView(id: "Window", path: "UI/Window/Window.prefab", isSingleInstance: false)]
+    [UIView(id: nameof(Window), path: "Prefabs/UI/Window", dataType: typeof(WindowData), isSingleInstance: false)]
     public class Window : View
     { 
-        protected override void SetData(ViewData viewData)
+        protected override void OnSetData(ViewData viewData)
         {
-            base.SetData(viewData);
+            base.OnSetData(viewData);
         }
 
         

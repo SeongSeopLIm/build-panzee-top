@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityCommunity.UnitySingleton;
 using UnityEngine;
 using WAK.Game;
@@ -20,8 +21,9 @@ namespace WAK.Managers
             Max
         }
 
+        private ReactiveProperty<StageType> currentStageType = new ReactiveProperty<StageType>(StageType.Spalsh);
+        public IReadOnlyReactiveProperty<StageType> CurrentStageType => currentStageType;
         public StageBase CurrentStage { get; private set; }
-
         private Dictionary<StageType, StageBase> stagesByType = new();
 
         protected override void OnInitialized()
@@ -48,6 +50,7 @@ namespace WAK.Managers
             {
                 CurrentStage.Enter();
             }
+            currentStageType.Value = newState;
         }
 
         private void GenerateStages()

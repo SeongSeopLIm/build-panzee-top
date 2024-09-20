@@ -13,14 +13,17 @@ namespace WAK.Managers
     {
         public enum SceneType
         {
+            None = -1, // not setted
             scene_initial,
             scene_lobby_and_game // 로비와 게임 플레이 같은 씬에서 진행
-        } 
+        }
+
+        public SceneType CurrentScene { get; private set; } = SceneType.None;
 
         public async UniTask LoadSceneAsync(SceneType sceneType)
         {
             await UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneType.ToString());
-
+            CurrentScene = sceneType;
         }
     }
 }

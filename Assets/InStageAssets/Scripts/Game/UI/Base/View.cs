@@ -50,8 +50,17 @@ namespace WAK.UI
     {
         ReactiveProperty<ViewState> state = new ReactiveProperty<ViewState>(ViewState.Hidden);
         IReadOnlyReactiveProperty<ViewState> State => state;
+        /// <summary>
+        /// 부착된 View 컴포넌트의 인스턴스ID
+        /// </summary>
+        public int HandleInstanceID { get; private set; } = 0;
+        public string ViewID { get; private set; } = string.Empty;
 
-
+        public virtual void Initialize(int handleInstanceID, string viewID)
+        {
+            HandleInstanceID = handleInstanceID;
+            ViewID = viewID;
+        }
 
         #region UI view animation
 
@@ -91,11 +100,13 @@ namespace WAK.UI
         void IVisibleUpdater.Show()
         {
             state.Value = ViewState.Show;
+            Debug.Log($"[UI] Show View : {ViewID}");
         }
 
         void IVisibleUpdater.Hide()
         {
             state.Value = ViewState.Hidden;
+            Debug.Log($"[UI] Hide View : {ViewID}");
         }
         #endregion
     }
@@ -108,10 +119,23 @@ namespace WAK.UI
     { 
         protected ViewData viewData { get; private set; }
 
+        private void Awake()
+        {
+            AddListeners();
+        }
+
         void IViewHandler.Initialize(ViewData viewData)
         {
             OnSetData(viewData);
             OnInitilized();
+        }
+
+        /// <summary>
+        /// UI 리스너 등록만
+        /// </summary>
+        protected virtual void AddListeners()
+        {
+
         }
 
         /// <summary>
@@ -122,9 +146,10 @@ namespace WAK.UI
 
         }
 
+
         protected virtual void OnSetData(ViewData viewData) 
         {
-            this.viewData = viewData;
+            this.viewData = viewData; 
         }
 
     }

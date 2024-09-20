@@ -1,6 +1,8 @@
 ﻿
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+using WAK.Managers;
 
 namespace WAK.UI
 {
@@ -14,9 +16,20 @@ namespace WAK.UI
     {
         [SerializeField] private Button backBtn;
 
+        protected override void AddListeners()
+        {
+            base.AddListeners();
+            backBtn.onClick.AddListener(OnClickBack);
+        }
+
         protected override void OnSetData(ViewData viewData)
         {
             base.OnSetData(viewData);
+        }
+
+        private void OnClickBack()
+        {
+            StageManager.Instance.SwitchStage(StageManager.StageType.Lobby);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace WAK.Game
         {
             if (isReady)
             {
-                StageManager.Instance.SwitchState(StageManager.StageType.Lobby);
+                StageManager.Instance.SwitchStage(StageManager.StageType.Lobby);
             }
         }
 

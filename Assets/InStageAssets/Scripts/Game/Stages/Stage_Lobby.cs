@@ -14,15 +14,31 @@ namespace WAK.Game
         public override void Enter()
         {
             base.Enter();
-            var globalSettings = Framework.Instance.GlobalSettings;
-            GameManager.Instance.Set(gamePlaySettings: globalSettings.DefaultPlaySettings,
-                playerController: globalSettings.DefaultPlayerController );
-            UnityGameSceneManager.Instance.LoadSceneAsync(UnityGameSceneManager.SceneType.scene_lobby_and_game).Forget();
+            if(UnityGameSceneManager.Instance.CurrentScene == UnityGameSceneManager.SceneType.scene_lobby_and_game)
+            {
+                var globalSettings = Framework.Instance.GlobalSettings;
+                GameManager.Instance.Set(gamePlaySettings: globalSettings.DefaultPlaySettings,
+                    playerController: globalSettings.DefaultPlayerController);
+            }
+            else
+            {
+                //enter from splash stage
+                LoadLobbySceneAndSetGameAsync().Forget();
+            } 
         }
 
         public override void Exit()
         {
             base.Exit();
+        }
+
+        private async UniTaskVoid LoadLobbySceneAndSetGameAsync()
+        {
+            await UnityGameSceneManager.Instance.LoadSceneAsync(UnityGameSceneManager.SceneType.scene_lobby_and_game);
+
+            var globalSettings = Framework.Instance.GlobalSettings;
+            GameManager.Instance.Set(gamePlaySettings: globalSettings.DefaultPlaySettings,
+                playerController: globalSettings.DefaultPlayerController);
         }
     }
 }

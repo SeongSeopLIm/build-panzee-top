@@ -33,8 +33,9 @@ namespace WAK.Managers
         }
 
         /// <param name="newState"></param>
-        public void SwitchState(StageType newState)
+        public void SwitchStage(StageType newState)
         {
+            Debug.Log($"[Stage] {CurrentStage} to {newState}");
             if (CurrentStage != null)
             {
                 CurrentStage.Exit();

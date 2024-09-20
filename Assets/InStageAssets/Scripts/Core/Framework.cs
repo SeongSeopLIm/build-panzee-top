@@ -18,17 +18,16 @@ namespace WAK.Core
         private ReactiveProperty<bool> isApplicationReady = new ReactiveProperty<bool>(false);
         public IReadOnlyReactiveProperty<bool> IsApplicationReady => isApplicationReady;
 
-        protected override void OnMonoSingletonCreated()
+        protected override void OnInitializing()
         {
-            base.OnMonoSingletonCreated();
-            isApplicationReady.Value = false;
+            base.OnInitializing();
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            PreloadSingletons();
-
+            isApplicationReady.Value = false;
+            PreloadSingletons(); 
             StartApplication();
         }
 
@@ -38,7 +37,7 @@ namespace WAK.Core
         private void PreloadSingletons()
         { 
             #region Singleton
-            WAK.Managers.StageManager.CreateInstance();
+
             #endregion
 
             #region PersistentMonoSingleton
@@ -48,7 +47,7 @@ namespace WAK.Core
 
         private void StartApplication()
         {
-            StageManager.Instance.SwitchState(StageManager.StageType.Spalsh);
+            StageManager.Instance.SwitchStage(StageManager.StageType.Spalsh);
             
             isApplicationReady.Value =true;
         }

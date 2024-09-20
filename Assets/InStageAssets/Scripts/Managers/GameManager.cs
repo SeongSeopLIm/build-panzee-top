@@ -2,26 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityCommunity.UnitySingleton;
-using WAK.Game; 
-
+using WAK.Game;
+using UnityEngine.InputSystem;
 namespace WAK.Managers
 {
 
     public class GameManager : MonoSingleton<GameManager>
     {
-        [SerializeField] private SpawnBundleSettings gamePlaySettings; 
-        public GamePlayerController PlayerController {  get; private set; } 
+        public GameSettings GameSettings{ get; private set; }
+        public GamePlayerController PlayerController {  get; private set; }
 
-        public void Set(SpawnBundleSettings gamePlaySettings, GamePlayerController playerController)
+        public Camera MainCamera => player.PlayerCamera;
+
+        #region GameLiveData
+        private GameObject world;
+        private Player player;
+
+        private WakHeadImpl currentHoldingObject; 
+        private float CurrentTopHeight = 0;
+
+        public bool IsHoldingObject => currentHoldingObject != null;
+        #endregion
+
+        public void Set(GameSettings gameSettings, GamePlayerController playerController)
         {
-            this.gamePlaySettings = gamePlaySettings;
+            Clear();
+            this.GameSettings = gameSettings;
             this.PlayerController = playerController;
+            
             PlayerController.Initalize();
+            var world = Instantiate(GameSettings.WorldPrefab, transform);
+            Instantiate(GameSettings.PlayerPrefab, world.transform).TryGetComponent<Player>(out player); 
         }
 
         public void Clear()
         {
-
+            currentHoldingObject = null;
+            CurrentTopHeight = 0;
+            // 쩝 게임로직은 일단 대충해보자. 
+            if(world)
+            {
+                Destroy(world);
+            }
+            if(player)
+            {
+                Destroy(player.gameObject);
+            }
         }
 
         /// <summary>
@@ -29,7 +55,9 @@ namespace WAK.Managers
         /// </summary>
         public void Play()
         {
-            PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Play>(PlayerController)); 
+            PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Play>(PlayerController));
+             
+            SpawnRandomAndHold(Vector2.zero);
         }
 
         public void Stop()
@@ -37,16 +65,55 @@ namespace WAK.Managers
             PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Wait>(PlayerController)); 
         }
 
-        public void SpawnAnimal(Vector2 screenPos)
+        public void SpawnRandomAndHold(Vector2 screenPos)
         {
             var objectParams = new ObjectManager.ObjectParams()
             {
                 dataKey = 0
             }; 
 
-            var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams); 
+            var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams);
+            wakHeadImpl.holdingAtCursor.Value = true;
+            currentHoldingObject = wakHeadImpl;
         }
          
+        public void ReleaseHold()
+        {
+            if(currentHoldingObject != null)
+            {
+                currentHoldingObject.holdingAtCursor.Value = false;
+                currentHoldingObject = null;
+            } 
+        }
+
+        public Vector3 GetCursorHoldPosition()
+        {
+            var screenPos = Mouse.current.position.ReadValue();
+            if (MainCamera == null)
+            {
+                Debug.LogWarning("Main Camera is not assigned.");
+                return Vector3.zero;
+            }
+
+            Vector3 worldPos = MainCamera.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, MainCamera.nearClipPlane));
+            worldPos.z = 0;
+            worldPos.y = Mathf.Max(GameSettings.SpawnHeightMin, CurrentTopHeight + GameSettings.SpawnDistanceToTop);
+            return worldPos;
+        }
+
+        private Vector3 GetCursorWorldPosition()
+        {
+            var screenPos = Mouse.current.position.ReadValue(); 
+            if (MainCamera == null)
+            {
+                Debug.LogWarning("Main Camera is not assigned.");
+                return Vector3.zero;
+            }
+
+            Vector3 worldPos = MainCamera.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, MainCamera.nearClipPlane));
+            worldPos.z = 0;
+            return worldPos;
+        }
     }
 }
 

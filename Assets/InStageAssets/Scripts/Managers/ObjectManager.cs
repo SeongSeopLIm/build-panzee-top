@@ -25,7 +25,7 @@ namespace WAK
 			public int dataKey;
 		}
 
-        public ActorImpl Spawn<ActorType>(ObjectParams objectParams) where ActorType : ActorImpl, new()
+        public ActorType Spawn<ActorType>(ObjectParams objectParams) where ActorType : ActorImpl, new()
 		{
 			string implID = GetActorID<ActorType>();
 			if (string.IsNullOrEmpty(implID))
@@ -56,7 +56,7 @@ namespace WAK
 			}
 
 
-			return actorInstance.Impl;
+			return actorInstance.Impl as ActorType;
 		}
 
 		public void Release(ActorImpl actorImpl)

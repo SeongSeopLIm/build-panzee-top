@@ -17,7 +17,7 @@ namespace WAK.Game
             if(UnityGameSceneManager.Instance.CurrentScene == UnityGameSceneManager.SceneType.scene_lobby_and_game)
             {
                 var globalSettings = Framework.Instance.GlobalSettings;
-                GameManager.Instance.Set(gamePlaySettings: globalSettings.DefaultPlaySettings,
+                GameManager.Instance.Set(gameSettings: globalSettings.DefaultGameSettings,
                     playerController: globalSettings.DefaultPlayerController);
             }
             else
@@ -37,7 +37,7 @@ namespace WAK.Game
             await UnityGameSceneManager.Instance.LoadSceneAsync(UnityGameSceneManager.SceneType.scene_lobby_and_game);
 
             var globalSettings = Framework.Instance.GlobalSettings;
-            GameManager.Instance.Set(gamePlaySettings: globalSettings.DefaultPlaySettings,
+            GameManager.Instance.Set(gameSettings: globalSettings.DefaultGameSettings,
                 playerController: globalSettings.DefaultPlayerController);
         }
     }

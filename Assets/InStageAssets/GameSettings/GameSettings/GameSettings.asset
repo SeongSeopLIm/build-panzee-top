@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ede114e54dfc13142a1cadd20dff829d, type: 3}
+  m_Name: GameSettings
+  m_EditorClassIdentifier: 
+  data: {fileID: 0}
+  spawnHeightMin: 2
+  spawnDistanceToTop: 0.5
+  worldPrefab: {fileID: 5138188728302779216, guid: 3a0cb4ffa560c6943b4ff9723d07d19a, type: 3}
+  player: {fileID: 3048394301915974420, guid: 32e46aa41d627b6498631b773fd7ef33, type: 3}
+  defaultPlaySettings: {fileID: 11400000, guid: 0f1c9d777e6d7ff44ae4278dfc1b41ac, type: 2}

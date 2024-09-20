@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using WAK.Managers;
 
 namespace WAK.Game
 {
@@ -33,7 +34,11 @@ namespace WAK.Game
             if (context.performed)
             {
                 Debug.Log("Tap action performed ");
-                //playerController.동물아떨어져라;
+                if (GameManager.Instance.IsHoldingObject)
+                {
+                    playerController.ReleaseCurrentHoldingObject();
+                }
+                
             }
         } 
     }

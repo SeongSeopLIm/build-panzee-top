@@ -42,8 +42,7 @@ namespace WAK
         /// </summary>
         protected virtual void Dispose()
         {
-            _disposables?.Dispose();
-            _disposables = null;
+            _disposables?.Clear();
         }
     }
 }

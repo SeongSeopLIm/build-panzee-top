@@ -15,12 +15,8 @@ public class GamePlayerController : PlayerControllerBase
     }
      
      
-    public void SpawnAnimalAsCursor()
+    public void ReleaseCurrentHoldingObject()
     {
-        // 여기에 동물 스폰
-
-        //InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Wait>(this));
-
-        GameManager.Instance.SpawnAnimal(Vector2.zero);
+        GameManager.Instance.ReleaseHold();
     }
 }

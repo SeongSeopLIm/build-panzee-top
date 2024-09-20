@@ -6,7 +6,7 @@ namespace WAK.Game
 
     public class PlayerState_Wait : StateBase
     {
-        public PlayerState_Wait(PlayerControllerBase controller) : base(controller)
+        public PlayerState_Wait(GamePlayerController controller) : base(controller)
         {
         }
 

@@ -3,7 +3,7 @@ using UnityEngine;
  
 public abstract class BaseScriptableObject<T> : ScriptableObject
 {
-    [SerializeField]
+    [SerializeField, HideInInspector]
     protected T data;
 
     public T Data

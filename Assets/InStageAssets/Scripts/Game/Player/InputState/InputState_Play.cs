@@ -6,7 +6,7 @@ namespace WAK.Game
 
     public class InputState_Play : StateBase, MainControl.IPlayActions
     {
-        public InputState_Play(PlayerControllerBase controller) : base(controller)
+        public InputState_Play(GamePlayerController controller) : base(controller)
         {
         }
 

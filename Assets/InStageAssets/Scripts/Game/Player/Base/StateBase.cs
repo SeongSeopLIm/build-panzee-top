@@ -7,9 +7,9 @@ namespace WAK.Game
 
     public abstract class StateBase : IState
     {
-        protected PlayerControllerBase playerController;
+        protected GamePlayerController playerController;
 
-        public StateBase(PlayerControllerBase controller)
+        public StateBase(GamePlayerController controller)
         {
             playerController = controller;
         }
@@ -24,7 +24,7 @@ namespace WAK.Game
 
 
         private static Dictionary<string, StateBase> statesByName = new();
-        public static StateBase GetOrCreate<T2>(PlayerControllerBase controller) where T2 : StateBase
+        public static StateBase GetOrCreate<T2>(GamePlayerController controller) where T2 : StateBase
         {
             string key = typeof(T2).Name;
             if (statesByName.TryGetValue(key, out var state))
@@ -33,7 +33,7 @@ namespace WAK.Game
             }
 
             // 퍼포먼스상 이슈 오면 그때 Init 에서 호출하는 형태로 전환
-            var newState = Activator.CreateInstance(typeof(T2), controller) as StateBase;
+            var newState = Activator.CreateInstance(typeof(T2), args: controller) as StateBase;
             if (newState == null)
             {
                 throw new InvalidOperationException($"Cannot create instance of {typeof(T2).Name}");

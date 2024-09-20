@@ -6,7 +6,7 @@ namespace WAK.Game
 
     public class InputState_Wait : StateBase, MainControl.IPlayActions
     {
-        public InputState_Wait(PlayerControllerBase controller) : base(controller)
+        public InputState_Wait(GamePlayerController controller) : base(controller)
         {
         }
 

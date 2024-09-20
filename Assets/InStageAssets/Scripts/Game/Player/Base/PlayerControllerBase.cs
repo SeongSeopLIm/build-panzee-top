@@ -9,21 +9,11 @@ namespace WAK.Game
 
     public class PlayerControllerBase : MonoBehaviour
     {
-        // StateMachine을 제너릭으로 설정
-        protected StateMachine<StateBase> InputStateMachine;
-        protected StateMachine<StateBase> PlayerStateMachine;
+        public StateMachine<StateBase> InputStateMachine { get; protected set; } = new();
+        // 일단 만들긴 했는데 필요없는 거 같아서 임시 주석처리. 지켜보다가 안 쓰면 삭제.
+        //public StateMachine<StateBase> PlayerStateMachine { get; protected set; } = new();
 
-        // Input Action 인스턴스
-
-        // 플레이어 프로퍼티 (예시)
-        protected int health = 100;
-
-        protected virtual void Awake()
-        {
-            InputStateMachine = new StateMachine<StateBase>();
-            PlayerStateMachine = new StateMachine<StateBase>();
-
-        }
+         
          
         protected virtual void OnDestroy()
         {
@@ -32,16 +22,12 @@ namespace WAK.Game
         
         protected virtual void Update()
         {
-            InputStateMachine.Update();
-            PlayerStateMachine.Update();
+            InputStateMachine.Update(); 
         }
          
         public virtual void Initalize()
-        {
-            InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Play>(this));
-            PlayerStateMachine.SwitchState(StateBase.GetOrCreate<PlayerState_Wait>(this));
-        }
-         
+        { 
 
+        } 
     }
 }

@@ -20,6 +20,8 @@ namespace WAK
         public virtual void OnSpawn()
         {
             impl?.OnSpawn(gameObject.GetInstanceID());
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity; 
         }
 
 

@@ -1,6 +1,7 @@
 // ObjectManager.cs
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityCommunity.UnitySingleton;
 using UnityEngine;
@@ -55,6 +56,26 @@ namespace WAK
 			return actorInstance.Impl as ActorType;
 		}
 
+		public void Clear()
+		{
+			for(var enumerator = objectByIntanceID.Values.GetEnumerator(); enumerator.MoveNext(); )
+            {
+                var poolID = enumerator.Current.Impl.ObjectParams.poolID;
+                if (pools.ContainsKey(poolID))
+                {
+                    pools[poolID].Release(enumerator.Current);
+                }
+                else
+                {
+                    Debug.LogError($"Not added pool : {poolID}");
+                    GameObject.Destroy(enumerator.Current.gameObject);
+                }
+            }
+			 
+            objectImplByIntanceID.Clear();
+            objectByIntanceID.Clear();
+        }
+
 		public void Release(ActorImpl actorImpl)
 		{ 
 			if(!objectByIntanceID.TryGetValue(actorImpl.ObjectID, out var actor))
@@ -78,8 +99,10 @@ namespace WAK
 			{
 				Debug.LogError($"Not added pool : {poolID}");
 				GameObject.Destroy(actor.gameObject);
-			}
-		}
+            }
+            objectImplByIntanceID.Remove(actor.GetInstanceID());
+            objectByIntanceID.Remove(actor.GetInstanceID()); 
+        }
 
 		private bool TryGetActorPrefab<T>(out Actor prefab) where T : ActorImpl
         {
@@ -142,8 +165,6 @@ namespace WAK
 
 		private void OnReleaseActor(Actor actor)
         { 
-            objectByIntanceID.Remove(actor.gameObject.GetInstanceID());
-            objectImplByIntanceID.Remove(actor.gameObject.GetInstanceID());
             actor.OnDespawn();
 			actor.gameObject.SetActive(false);
 		}

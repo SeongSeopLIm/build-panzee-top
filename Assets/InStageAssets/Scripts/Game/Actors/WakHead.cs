@@ -15,10 +15,14 @@ namespace WAK.Game
     public class WakHead : Actor
     {
         // rigidbody2D 이름이 안되는데 모징? 원래 그런 건가
-        [SerializeField] private Rigidbody2D _rigidbody2D;
+        [SerializeField] private Rigidbody2D _rigidbody2D; 
+        [SerializeField] private SpriteRenderer spriteRenderer; 
+        [SerializeField] private Collider2D _collider2D;
+
 
         protected WakHeadImpl wakHeadimpl => impl as WakHeadImpl;
         CompositeDisposable disposables = new CompositeDisposable();
+
         public override void OnSpawn()
         {
             base.OnSpawn();
@@ -26,6 +30,7 @@ namespace WAK.Game
                 .DistinctUntilChanged()
                 .Subscribe(OnHoldToCursor)
                 .AddTo(disposables);
+             
         }
 
         public override void OnDespawn()
@@ -33,28 +38,28 @@ namespace WAK.Game
             disposables?.Clear();
             base.OnDespawn();
         }
-
-        private void Reset()
-        {
-            if(!_rigidbody2D)
-            {
-                gameObject.TryGetComponent<Rigidbody2D>(out _rigidbody2D);
-            }
-        }
-
+         
         private void OnValidate()
         {
             if (!_rigidbody2D)
             {
-                gameObject.TryGetComponent<Rigidbody2D>(out _rigidbody2D);
+                gameObject.TryGetComponent(out _rigidbody2D);
+            }
+            if (!spriteRenderer)
+            {
+                gameObject.TryGetComponent(out spriteRenderer);
+            }
+            if (!_collider2D)
+            {
+                gameObject.TryGetComponent(out _collider2D);
             }
         }
 
         private void OnHoldToCursor(bool isHold)
         {
             _rigidbody2D.simulated = !isHold; 
-        }
 
+        }
 
         private void Update()
         {
@@ -62,24 +67,42 @@ namespace WAK.Game
             {
                 transform.position = GameManager.Instance.GetCursorHoldPosition(); 
             }
-            CheckIsMoving();
+            else
+            {
+                CheckIsMoving();
+            }
+            
         }
 
         private void CheckIsMoving()
         {
+            var filter = new ContactFilter2D() { layerMask = gameObject.layer }; 
             // TODO : 체크 방식 수정 필요. 
             if (_rigidbody2D.velocity.sqrMagnitude > 0.1 ||
-                Mathf.Abs(_rigidbody2D.angularVelocity) > 0.1)
+                Mathf.Abs(_rigidbody2D.angularVelocity) > 0.1 ||
+                !_collider2D.IsTouching(filter))
             {
-                wakHeadimpl.isMoving.Value = true;
+                if(!wakHeadimpl.isMoving.Value)
+                    wakHeadimpl.isMoving.Value = true;
             }
             else
             {
-                wakHeadimpl.isMoving.Value = false;
+                if (wakHeadimpl.isMoving.Value)
+                {
+                    OnStop();
+                    wakHeadimpl.isMoving.Value = false;
+                }
             }
         }
 
-
-
+        private void OnStop()
+        {
+            wakHeadimpl.TopPositionY = spriteRenderer.bounds.max.y;
+            if(GameManager.Instance.CurrentTopHeight < wakHeadimpl.TopPositionY)
+            {
+                GameManager.Instance.RegisterHighestObject(wakHeadimpl);
+            }
+            
+        }
     }
 }

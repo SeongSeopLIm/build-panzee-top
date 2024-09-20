@@ -5,6 +5,7 @@ using UnityCommunity.UnitySingleton;
 using WAK.Game;
 using UnityEngine.InputSystem;
 using UnityEditor.ShaderGraph;
+using Cysharp.Threading.Tasks;
 namespace WAK.Managers
 {
 
@@ -20,10 +21,11 @@ namespace WAK.Managers
         private GameObject world;
         private Player player;
 
-        private WakHeadImpl currentHoldingObject; 
-        private float CurrentTopHeight = 0;
+        private WakHeadImpl highestObject;
+        private WakHeadImpl currentHoldingObject;
+        public float CurrentTopHeight { get; private set; } = 0;
 
-        public bool IsHoldingObject => currentHoldingObject != null;
+        public bool IsHoldingObject => currentHoldingObject != null; 
         #endregion
 
         public void Set(GameSettings gameSettings, GamePlayerController playerController)
@@ -59,6 +61,7 @@ namespace WAK.Managers
             {
                 MainControls.RemoveAllBindingOverrides();
             }
+            ObjectManager.Instance.Clear();
         }
 
         /// <summary>
@@ -98,6 +101,22 @@ namespace WAK.Managers
             {
                 currentHoldingObject.holdingAtCursor.Value = false;
                 currentHoldingObject = null;
+                ReloadHold_JustForTest().Forget();
+            }  
+        }
+        public void RegisterHighestObject(WakHeadImpl nextHighestObject)
+        {
+            highestObject = nextHighestObject;
+            CurrentTopHeight = Mathf.Max(CurrentTopHeight, highestObject.TopPositionY);
+            Debug.Log($"[Game] New TOP Height : {CurrentTopHeight}");
+        }
+
+        private async UniTaskVoid ReloadHold_JustForTest()
+        {
+            await UniTask.Delay(1000);
+            if(StageManager.Instance.CurrentStageType.Value == StageManager.StageType.Play)
+            {
+                SpawnRandomAndHold(Vector2.zero);
             } 
         }
 

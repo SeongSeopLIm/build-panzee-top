@@ -9,8 +9,8 @@ namespace WAK.Game
         [SerializeField] private GamePlayerController defaultPlayerController;
         public GamePlayerController DefaultPlayerController => defaultPlayerController;
 
-        [SerializeField] private GamePlaySettings defaultPlaySettings;
-        public GamePlaySettings DefaultPlaySettings => defaultPlaySettings;
+        [SerializeField] private SpawnBundleSettings defaultPlaySettings;
+        public SpawnBundleSettings DefaultPlaySettings => defaultPlaySettings;
 
     }
 }

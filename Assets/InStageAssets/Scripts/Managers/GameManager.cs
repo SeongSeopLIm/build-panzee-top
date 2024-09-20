@@ -9,10 +9,10 @@ namespace WAK.Managers
 
     public class GameManager : MonoSingleton<GameManager>
     {
-        [SerializeField] private GamePlaySettings gamePlaySettings; 
+        [SerializeField] private SpawnBundleSettings gamePlaySettings; 
         public GamePlayerController PlayerController {  get; private set; } 
 
-        public void Set(GamePlaySettings gamePlaySettings, GamePlayerController playerController)
+        public void Set(SpawnBundleSettings gamePlaySettings, GamePlayerController playerController)
         {
             this.gamePlaySettings = gamePlaySettings;
             this.PlayerController = playerController;

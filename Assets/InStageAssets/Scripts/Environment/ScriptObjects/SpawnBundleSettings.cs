@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace WAK.Game
 {
-    [CreateAssetMenu(fileName = "GamePlaySettings", menuName = "ScriptableObjects/GamePlaySettings")]
-    public class GamePlaySettings : BaseScriptableObject<GamePlaySettings>
+    [CreateAssetMenu(fileName = "SpawnBundleSettings", menuName = "ScriptableObjects/SpawnBundleSettings")]
+    public class SpawnBundleSettings : BaseScriptableObject<SpawnBundleSettings>
     {
         [SerializeField, Tooltip("CopyPath로 긁은 경로 (예: Assets/Prefabs/Actors)")]
         private string prefabFolderPath; 

@@ -2,8 +2,8 @@
 using UnityEditor;
 using WAK.Game;
 
-[CustomEditor(typeof(GamePlaySettings))]
-public class GamePlaySettingsEditor : Editor
+[CustomEditor(typeof(SpawnBundleSettings))]
+public class SpawnBundleSettingsEditor : Editor
 {
     SerializedProperty prefabFolderPathProp;
     SerializedProperty spawnPrefabsProp;
@@ -22,7 +22,7 @@ public class GamePlaySettingsEditor : Editor
 
         if (GUILayout.Button("Update Prefab List"))
         {
-            GamePlaySettings settings = (GamePlaySettings)target;
+            SpawnBundleSettings settings = (SpawnBundleSettings)target;
 
             settings.UpdateSpawnPrefabs();
 

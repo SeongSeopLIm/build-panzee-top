@@ -11,7 +11,7 @@ namespace WAK.UI
 
     }
 
-    [UIView(id: nameof(ResultMainWindow), path: "Prefabs/UI/GameMainWindow", dataType: typeof(ResultMainWindowData))]
+    [UIView(id: nameof(ResultMainWindow), path: "Prefabs/UI/ResultMainWindow", dataType: typeof(ResultMainWindowData))]
     public class ResultMainWindow : Window
     {
         [SerializeField] private Button restartBtn;

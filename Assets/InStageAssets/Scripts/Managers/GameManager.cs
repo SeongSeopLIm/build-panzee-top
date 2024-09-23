@@ -65,13 +65,17 @@ namespace WAK.Managers
             ObjectManager.Instance.Clear();
         }
 
+
+
         /// <summary>
         /// UI를 통한 사용 금지. Stage_Play 전환으로 글로벌 상태를 변경하여 진행.
         /// </summary>
         public void Play()
         {
-            PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Play>(PlayerController));
-             
+            ObjectManager.Instance.Clear();
+            currentHoldingObject = null;
+            CurrentTopHeight = 0; 
+            PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Play>(PlayerController)); 
             SpawnRandomAndHold(Vector2.zero);
         }
 
@@ -79,6 +83,7 @@ namespace WAK.Managers
         {
             PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Wait>(PlayerController)); 
         }
+         
 
         public void SpawnRandomAndHold(Vector2 screenPos)
         {

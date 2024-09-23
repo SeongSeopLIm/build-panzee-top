@@ -21,6 +21,12 @@ namespace WAK.Core
         protected override void OnInitializing()
         {
             base.OnInitializing();
+            int targetWidth = Screen.width;
+            int minHeight = Mathf.RoundToInt(targetWidth * (16.0f / 9.0f));
+            var height = Mathf.Max(minHeight, 1920); 
+            int targetHeight = Mathf.Max(Screen.height, height);
+
+            Screen.SetResolution(targetWidth, targetHeight, true);
         }
 
         protected override void OnInitialized()

@@ -89,8 +89,8 @@ namespace WAK.Game
             {
                 if (wakHeadimpl.isMoving.Value)
                 {
-                    OnStop();
                     wakHeadimpl.isMoving.Value = false;
+                    OnStop();
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace WAK.Game
             {
                 GameManager.Instance.RegisterHighestObject(wakHeadimpl);
             }
-            
+            GameManager.Instance.CheckRespawn(); 
         }
     }
 }

@@ -22,6 +22,8 @@ namespace WAK.Game
         {
             base.OnSpawn(objectID);
             TopPositionY = 0;
+            holdingAtCursor.Value = true;
+            isMoving.Value = true;
         }
 
         public override void OnDespawn()

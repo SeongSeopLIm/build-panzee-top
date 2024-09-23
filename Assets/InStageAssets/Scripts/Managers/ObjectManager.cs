@@ -17,18 +17,23 @@ namespace WAK
 		// 어차피 오브젝트 종류 하나인데 나 이거 왜만들었징 ㅇㅅㅇ...
         private Dictionary<string, ObjectPool<Actor>> pools = new Dictionary<string, ObjectPool<Actor>>();
 		private Dictionary<int, ActorImpl> objectImplByIntanceID = new Dictionary<int, ActorImpl>();
-        private Dictionary<int, Actor> objectByIntanceID = new Dictionary<int, Actor>();
+        private Dictionary<int, Actor> objectByIntanceID = new Dictionary<int, Actor>(); 
 
-		/// <summary>
-		/// 초기화에 사용될 오브젝트 파라미터. 추상적인 값이니, 보편벅인 값알 넣고 구현할 때 알아서 사용.
-		/// </summary>
-		public struct ObjectParams
+        /// <summary>
+        /// 초기화에 사용될 오브젝트 파라미터. 추상적인 값이니, 보편벅인 값알 넣고 구현할 때 알아서 사용.
+        /// </summary>
+        public struct ObjectParams
         {
             public int dataKey;
             public string poolID;
         }
 
-        public ActorType Spawn<ActorType>(ObjectParams objectParams) where ActorType : ActorImpl, new()
+		public IEnumerator<ActorImpl> GetObjects()
+		{
+			return objectImplByIntanceID.Values.GetEnumerator();
+        }
+
+        public ActorType Spawn<ActorType>(ObjectParams objectParams, Vector3 spawnPos) where ActorType : ActorImpl, new()
 		{  
 
 			if (!pools.ContainsKey(objectParams.poolID))
@@ -45,6 +50,7 @@ namespace WAK
 			}
 
 			Actor actorInstance = pools[objectParams.poolID].Get();  
+			actorInstance.transform.position = spawnPos;
 
 			if (actorInstance == null)
 			{

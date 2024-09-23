@@ -39,6 +39,8 @@ namespace WAK.Game
 
         public int GetTotalProbability()
         {
+            if (cumulativeProbabilities.Count != spawnBundleDatas.Count)
+                UpdateCumulativeProbabilities();
             if (cumulativeProbabilities.Count > 0)
                 return cumulativeProbabilities[cumulativeProbabilities.Count - 1];
             return 0;
@@ -104,8 +106,7 @@ namespace WAK.Game
             // 삭제된 에셋은 existingPrefabsDict에 남아있음. 따라서 업데이트된 리스트에는 추가하지 않음
 
             spawnBundleDatas = updatedSpawnPrefabs;
-
-            // 누적 확률 업데이트
+             
             UpdateCumulativeProbabilities();
 
             EditorUtility.SetDirty(this);

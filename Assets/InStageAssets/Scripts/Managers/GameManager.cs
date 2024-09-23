@@ -104,6 +104,7 @@ namespace WAK.Managers
                 Debug.LogError("프리팹 선택에 실패 randomValue: " + randomValue);
                 return;
             }
+            Debug.Log($"SpawnIdx : {selectedIndex} / Totla : {totalProbability} / Target : {randomValue}");
 
             var selectedData = spawnBundleDatas[selectedIndex];
             var objectParams = new ObjectManager.ObjectParams()
@@ -112,7 +113,7 @@ namespace WAK.Managers
                 poolID = selectedData.spawnPrefab.name // 프리팹 이름이 겹치지 않도록 주의
             };
 
-            var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams);
+            var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams, GetCursorHoldPosition());
             wakHeadImpl.holdingAtCursor.Value = true;
             currentHoldingObject = wakHeadImpl;
         }
@@ -123,10 +124,10 @@ namespace WAK.Managers
             if(currentHoldingObject != null)
             {
                 currentHoldingObject.holdingAtCursor.Value = false;
-                currentHoldingObject = null;
-                ReloadHold_JustForTest().Forget();
+                currentHoldingObject = null; 
             }  
         }
+
         public void RegisterHighestObject(WakHeadImpl nextHighestObject)
         {
             highestObject = nextHighestObject;
@@ -134,14 +135,33 @@ namespace WAK.Managers
             Debug.Log($"[Game] New TOP Height : {CurrentTopHeight}");
         }
 
-        private async UniTaskVoid ReloadHold_JustForTest()
+        public void CheckRespawn()
         {
-            await UniTask.Delay(1000);
-            if(StageManager.Instance.CurrentStageType.Value == StageManager.StageType.Play)
+            if (StageManager.Instance.CurrentStageType.Value != StageManager.StageType.Play)
+                return;
+            if (IsHoldingObject)
+                return;
+
+            bool canResapwn = true;
+            var iter = ObjectManager.Instance.GetObjects();
+            while (iter.MoveNext())
             {
-                SpawnRandomAndHold(Vector2.zero);
-            } 
-        }
+                var spawnObject = iter.Current;
+                if (spawnObject is not WakHeadImpl wakHead)
+                    continue;
+
+                if(wakHead.isMoving.Value)
+                {
+                    canResapwn = false;
+                    break;
+                }
+            }
+            if (!canResapwn)
+                return;
+
+            SpawnRandomAndHold(Vector2.zero);
+
+        } 
 
         public Vector3 GetCursorHoldPosition()
         {

@@ -17,8 +17,7 @@ public class SpawnBundleSettingsEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
-        EditorGUILayout.PropertyField(prefabFolderPathProp, new GUIContent("Prefab Folder Path", "Assets 폴더를 기준으로 한 상대 경로를 입력하세요 (예: Prefabs/Actors)"));
+        base.OnInspectorGUI();
 
         if (GUILayout.Button("Update Prefab List"))
         {
@@ -30,8 +29,7 @@ public class SpawnBundleSettingsEditor : Editor
             AssetDatabase.SaveAssets();
         }
 
-        EditorGUILayout.PropertyField(spawnPrefabsProp, new GUIContent("Spawn Prefabs"), true);
-
         serializedObject.ApplyModifiedProperties();
+
     }
 }

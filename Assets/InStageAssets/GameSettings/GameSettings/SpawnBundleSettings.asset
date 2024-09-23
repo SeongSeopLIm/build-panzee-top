@@ -13,11 +13,18 @@ MonoBehaviour:
   m_Name: SpawnBundleSettings
   m_EditorClassIdentifier: 
   prefabFolderPath: Assets/Resources/Prefabs/Actors/SpawnObjects
-  spawnPrefabs:
-  - {fileID: 412656860345265935, guid: ea0e87ffa4c07e841b9cfe9c94b99f9f, type: 3}
-  - {fileID: 412656860345265935, guid: 13be76bd01d43b841861032f9ff49fb7, type: 3}
-  - {fileID: 412656860345265935, guid: 04bf7efdd2bf74f47bda91c0b941d67b, type: 3}
-  - {fileID: 412656860345265935, guid: 75aaef023bc7a2141a6da93e42da6b30, type: 3}
-  - {fileID: 412656860345265935, guid: 234a0945de881d549abfa38afb3e7375, type: 3}
-  - {fileID: 412656860345265935, guid: 989d2cb3ae8adbb43b1741eeb139f299, type: 3}
-  - {fileID: 412656860345265935, guid: fbeb913d7bb8c5e47bab6a510fb0147c, type: 3}
+  spawnBundleDatas:
+  - spawnPrefab: {fileID: 412656860345265935, guid: ea0e87ffa4c07e841b9cfe9c94b99f9f, type: 3}
+    probabilityCount: 1
+  - spawnPrefab: {fileID: 412656860345265935, guid: 13be76bd01d43b841861032f9ff49fb7, type: 3}
+    probabilityCount: 1
+  - spawnPrefab: {fileID: 412656860345265935, guid: 04bf7efdd2bf74f47bda91c0b941d67b, type: 3}
+    probabilityCount: 1
+  - spawnPrefab: {fileID: 412656860345265935, guid: 75aaef023bc7a2141a6da93e42da6b30, type: 3}
+    probabilityCount: 1
+  - spawnPrefab: {fileID: 412656860345265935, guid: 234a0945de881d549abfa38afb3e7375, type: 3}
+    probabilityCount: 1
+  - spawnPrefab: {fileID: 412656860345265935, guid: 989d2cb3ae8adbb43b1741eeb139f299, type: 3}
+    probabilityCount: 1
+  - spawnPrefab: {fileID: 412656860345265935, guid: fbeb913d7bb8c5e47bab6a510fb0147c, type: 3}
+    probabilityCount: 1

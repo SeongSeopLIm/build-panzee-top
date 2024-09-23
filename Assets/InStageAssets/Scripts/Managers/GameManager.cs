@@ -6,6 +6,7 @@ using WAK.Game;
 using UnityEngine.InputSystem;
 using UnityEditor.ShaderGraph;
 using Cysharp.Threading.Tasks;
+using static WAK.Game.SpawnBundleSettings;
 namespace WAK.Managers
 {
 
@@ -81,20 +82,42 @@ namespace WAK.Managers
 
         public void SpawnRandomAndHold(Vector2 screenPos)
         {
-            var maxCount = GameSettings.SpawnBundleSettings.SpawnPrefabs.Count;
-            var idx = Random.Range(0, maxCount);
+            var spawnBundleDatas = GameSettings.SpawnBundleSettings.SpawnBundleDatas;
+            if (spawnBundleDatas == null || spawnBundleDatas.Count == 0)
+            {
+                Debug.LogError("SpawnBundleDatas 리스트가 비어있습니다.");
+                return;
+            }
+             
+            int totalProbability = GameSettings.SpawnBundleSettings.GetTotalProbability();
+            if (totalProbability <= 0)
+            {
+                Debug.LogError("probabilityCount 합 0");
+                return;
+            }
+             
+            int randomValue = Random.Range(0, totalProbability); 
 
+            int selectedIndex = GameSettings.SpawnBundleSettings.GetSelectedIndex(randomValue);
+            if (selectedIndex < 0 || selectedIndex >= spawnBundleDatas.Count)
+            {
+                Debug.LogError("프리팹 선택에 실패 randomValue: " + randomValue);
+                return;
+            }
+
+            var selectedData = spawnBundleDatas[selectedIndex];
             var objectParams = new ObjectManager.ObjectParams()
             {
-                dataKey = idx, 
-                poolID = GameSettings.SpawnBundleSettings.SpawnPrefabs[idx].name // 프리팹 이름 겹치지 않게 주의
-            }; 
+                dataKey = selectedIndex,
+                poolID = selectedData.spawnPrefab.name // 프리팹 이름이 겹치지 않도록 주의
+            };
 
             var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams);
             wakHeadImpl.holdingAtCursor.Value = true;
             currentHoldingObject = wakHeadImpl;
         }
-         
+
+
         public void ReleaseHold()
         {
             if(currentHoldingObject != null)

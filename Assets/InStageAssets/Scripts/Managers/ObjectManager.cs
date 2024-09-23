@@ -135,9 +135,9 @@ namespace WAK
 			}
 			*/
 
-			var prefab = GameManager.Instance.GameSettings.SpawnBundleSettings.SpawnPrefabs[objectParams.dataKey];
+			var spawnData = GameManager.Instance.GameSettings.SpawnBundleSettings.SpawnBundleDatas[objectParams.dataKey];
 
-            GameObject actorGO = GameObject.Instantiate(prefab);
+            GameObject actorGO = GameObject.Instantiate(spawnData.spawnPrefab);
 			Actor actor = actorGO.GetComponent<Actor>();
 			if (actor == null)
 			{ 

@@ -18,5 +18,8 @@ namespace WAK.Game
 
         [SerializeField] private SpawnBundleSettings spawnBundleSettings;
         public SpawnBundleSettings SpawnBundleSettings => spawnBundleSettings;
+
+        [SerializeField] private float spinAxisPerSec = 120f;
+        public float SpinAnglePerSec => spinAxisPerSec;
     }
 }

@@ -18,5 +18,5 @@ public class GamePlayerController : PlayerControllerBase
     public void ReleaseCurrentHoldingObject()
     {
         GameManager.Instance.ReleaseHold();
-    }
+    } 
 }

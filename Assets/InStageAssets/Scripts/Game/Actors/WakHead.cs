@@ -4,6 +4,8 @@ using UnityEngine;
 using WAK.Managers;
 using UniRx;
 using System;
+using DG.Tweening;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 namespace WAK.Game
 {
@@ -19,7 +21,7 @@ namespace WAK.Game
         [SerializeField] private SpriteRenderer spriteRenderer; 
         [SerializeField] private Collider2D _collider2D;
 
-
+        Vector2 spriteSize;
         protected WakHeadImpl wakHeadimpl => impl as WakHeadImpl;
         CompositeDisposable disposables = new CompositeDisposable();
 
@@ -28,13 +30,34 @@ namespace WAK.Game
             base.OnSpawn();
             wakHeadimpl.holdingAtCursor
                 .DistinctUntilChanged()
-                .Subscribe(OnHoldToCursor)
+                .Subscribe(OnHoldChangedToCursor)
                 .AddTo(disposables);
-             
+            wakHeadimpl.roateMode
+                .DistinctUntilChanged()
+                .Subscribe(OnRotationModeChanged)
+                .AddTo(disposables); 
+            spriteSize = spriteRenderer.bounds.size;
+        }
+
+        private void OnRotationModeChanged(WakHeadImpl.RotationMode mode)
+        {
+            DOTween.Kill(GetInstanceID());
+
+            if(mode == WakHeadImpl.RotationMode.Stop)
+                return;
+            var dir = mode == WakHeadImpl.RotationMode.Right ? 1 : -1;
+            var speed = GameManager.Instance.GameSettings.SpinAnglePerSec;
+
+            transform.DOLocalRotate(new Vector3(0, 0, 360f * dir), speed, RotateMode.LocalAxisAdd)
+                .SetSpeedBased()
+                .SetLoops(-1)
+                .SetEase(Ease.Linear)
+                .SetId(GetInstanceID());
         }
 
         public override void OnDespawn()
         {
+            DOTween.Kill(GetInstanceID());
             disposables?.Clear();
             base.OnDespawn();
         }
@@ -55,17 +78,21 @@ namespace WAK.Game
             }
         }
 
-        private void OnHoldToCursor(bool isHold)
+        private void OnHoldChangedToCursor(bool isHold)
         {
             _rigidbody2D.simulated = !isHold; 
-
+            if(isHold is false)
+            {
+                wakHeadimpl.roateMode.Value = WakHeadImpl.RotationMode.Stop;
+            }
         }
 
         private void Update()
         {
             if (wakHeadimpl.holdingAtCursor.Value)
             {
-                transform.position = GameManager.Instance.GetCursorHoldPosition(); 
+                
+                transform.position = new Vector3(0, spriteSize.y / 2, 0) + GameManager.Instance.GetCursorHoldPosition(); 
             }
             else
             {

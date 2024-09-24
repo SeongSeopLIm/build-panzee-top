@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Drawing;
 
 namespace WAK.Game
 {
@@ -12,7 +13,11 @@ namespace WAK.Game
         [Serializable]
         public class SpawnBundleData
         {
+            [Header("자동 업데이트 영역")]
             public GameObject spawnPrefab;
+            // 사이즈 안 맞으면 갱신 필요.
+            public Vector2 Size;
+            [Header("유저 설정 영역")]
             public int probabilityCount;
         }
 
@@ -85,8 +90,10 @@ namespace WAK.Game
                 GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
                 if (prefab != null)
                 {
+                    prefab.TryGetComponent<SpriteRenderer>(out var spriteRenderer);
                     if (existingPrefabsDict.TryGetValue(guid, out SpawnBundleData existingData))
                     {
+                        existingData.Size = spriteRenderer.bounds.size;
                         // 기존 데이터가 있으면 그대로 유지
                         updatedSpawnPrefabs.Add(existingData);
                         existingPrefabsDict.Remove(guid);
@@ -96,7 +103,8 @@ namespace WAK.Game
                         SpawnBundleData newData = new SpawnBundleData()
                         {
                             spawnPrefab = prefab,
-                            probabilityCount = 0
+                            probabilityCount = 0,
+                            Size = spriteRenderer.bounds.size,
                         };
                         updatedSpawnPrefabs.Add(newData);
                     }

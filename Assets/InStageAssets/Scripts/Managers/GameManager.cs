@@ -4,6 +4,7 @@ using UnityCommunity.UnitySingleton;
 using WAK.Game;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using static WAK.Game.WakHeadImpl;
 
 namespace WAK.Managers
 {
@@ -27,6 +28,7 @@ namespace WAK.Managers
         private WakHeadImpl highestObject;
         private WakHeadImpl currentHoldingObject;
 
+        public Player Player => player;
         public float Score { get; private set; } = 0;
         public float CurrentTopHeight { get; private set; } = 0; 
         public bool IsHoldingObject => currentHoldingObject != null; 
@@ -86,6 +88,7 @@ namespace WAK.Managers
 
         public void Stop()
         {
+            SetHoldObjectRotationMode(WakHeadImpl.RotationMode.Stop);
             PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Wait>(PlayerController)); 
         }
 
@@ -134,19 +137,34 @@ namespace WAK.Managers
                 poolID = selectedData.spawnPrefab.name // 프리팹 이름이 겹치지 않도록 주의
             };
 
-            var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams, GetCursorHoldPosition());
+            var addHeight = new Vector3(0, selectedData.Size.y / 2, 0);
+            var wakHeadImpl = ObjectManager.Instance.Spawn<WakHeadImpl>(objectParams, addHeight + GetCursorHoldPosition());
             wakHeadImpl.holdingAtCursor.Value = true;
             currentHoldingObject = wakHeadImpl;
         }
-
 
         public void ReleaseHold()
         {
             if(currentHoldingObject != null)
             {
                 currentHoldingObject.holdingAtCursor.Value = false;
+                currentHoldingObject.roateMode.Value = RotationMode.Stop;
                 currentHoldingObject = null; 
             }  
+        }
+
+        /// <param name="direction">-1 or 1 is Rotate, 0 is stop</param>
+        public void SetHoldObjectRotationMode(WakHeadImpl.RotationMode rotationMode)
+        {
+            if (IsHoldingObject)
+            {
+                currentHoldingObject.roateMode.Value = rotationMode;
+            }
+            else
+            {
+                Debug.Log("회전할 대상 없음");
+            }
+            Debug.Log($"SetHoldObjectRotationMode : {rotationMode}");
         }
 
         public void RegisterHighestObject(WakHeadImpl nextHighestObject)

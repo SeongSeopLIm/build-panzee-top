@@ -27,15 +27,20 @@ namespace WAK.Game
             base.Update();
 
         }
-
-        public void OnTap(InputAction.CallbackContext context)
+         
+        void MainControl.IPlayActions.OnTap(InputAction.CallbackContext context)
         {
             // 요기 상태에서는 스킵
             if (context.performed)
             {
-                Debug.Log("InputState_Wait Tap action performed "); 
+                Debug.Log("InputState_Wait Tap action performed ");
             }
-        } 
+        }
+
+        void MainControl.IPlayActions.OnTurn(InputAction.CallbackContext context)
+        {
+            Debug.Log($"InputState_Wait Turn : {context}");
+        }
     }
 
 }

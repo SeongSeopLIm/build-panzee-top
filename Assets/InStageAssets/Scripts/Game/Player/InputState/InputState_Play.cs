@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Composites;
 using WAK.Managers;
 
 namespace WAK.Game
@@ -30,19 +31,35 @@ namespace WAK.Game
             base.Update();
 
         }
-
-        public void OnTap(InputAction.CallbackContext context)
-        { 
+         
+        void MainControl.IPlayActions.OnTap(InputAction.CallbackContext context)
+        {
             if (context.performed)
             {
                 Debug.Log("Tap action performed ");
                 if (GameManager.Instance.IsHoldingObject)
                 {
                     playerController.ReleaseCurrentHoldingObject();
-                }
-                
+                } 
             }
-        } 
+        }
+
+        void MainControl.IPlayActions.OnTurn(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            { 
+                if (GameManager.Instance.IsHoldingObject)
+                {
+                    var value = context.ReadValue<float>();
+                    var mode = value == 1 ? WakHeadImpl.RotationMode.Right : WakHeadImpl.RotationMode.Left;
+                    GameManager.Instance.SetHoldObjectRotationMode(mode);
+                }
+            }
+            else if (context.canceled)
+            {
+                GameManager.Instance.SetHoldObjectRotationMode(WakHeadImpl.RotationMode.Stop);
+            }
+        }
     }
 
 }

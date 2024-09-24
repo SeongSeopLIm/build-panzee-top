@@ -17,3 +17,4 @@ MonoBehaviour:
   worldPrefab: {fileID: 5138188728302779216, guid: 3a0cb4ffa560c6943b4ff9723d07d19a, type: 3}
   player: {fileID: 3048394301915974420, guid: 32e46aa41d627b6498631b773fd7ef33, type: 3}
   spawnBundleSettings: {fileID: 11400000, guid: 0f1c9d777e6d7ff44ae4278dfc1b41ac, type: 2}
+  spinAxisPerSec: 120

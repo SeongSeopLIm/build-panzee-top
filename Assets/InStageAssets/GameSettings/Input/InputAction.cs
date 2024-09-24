@@ -35,6 +35,15 @@ public partial class @MainControl: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Tap,SlowTap"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""turn"",
+                    ""type"": ""Value"",
+                    ""id"": ""91e21bee-bdc9-40c7-bf07-7be354d623c1"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -48,6 +57,72 @@ public partial class @MainControl: IInputActionCollection2, IDisposable
                     ""action"": ""tap"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""13122ee1-6c27-4152-8c5a-0a644ec41aad"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""add41419-219f-460e-92d1-dd13b498d766"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""d0042595-8d4a-415f-8ffc-caac7ada0c10"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""d4009aed-3070-46f6-ad72-373d36bd10a7"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""9f920e7c-3d22-44ad-a354-dd0fdb6af583"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""33d1ceca-8c30-4ad5-88d7-839fca2509a1"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -57,6 +132,7 @@ public partial class @MainControl: IInputActionCollection2, IDisposable
         // play
         m_play = asset.FindActionMap("play", throwIfNotFound: true);
         m_play_tap = m_play.FindAction("tap", throwIfNotFound: true);
+        m_play_turn = m_play.FindAction("turn", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -119,11 +195,13 @@ public partial class @MainControl: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_play;
     private List<IPlayActions> m_PlayActionsCallbackInterfaces = new List<IPlayActions>();
     private readonly InputAction m_play_tap;
+    private readonly InputAction m_play_turn;
     public struct PlayActions
     {
         private @MainControl m_Wrapper;
         public PlayActions(@MainControl wrapper) { m_Wrapper = wrapper; }
         public InputAction @tap => m_Wrapper.m_play_tap;
+        public InputAction @turn => m_Wrapper.m_play_turn;
         public InputActionMap Get() { return m_Wrapper.m_play; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -136,6 +214,9 @@ public partial class @MainControl: IInputActionCollection2, IDisposable
             @tap.started += instance.OnTap;
             @tap.performed += instance.OnTap;
             @tap.canceled += instance.OnTap;
+            @turn.started += instance.OnTurn;
+            @turn.performed += instance.OnTurn;
+            @turn.canceled += instance.OnTurn;
         }
 
         private void UnregisterCallbacks(IPlayActions instance)
@@ -143,6 +224,9 @@ public partial class @MainControl: IInputActionCollection2, IDisposable
             @tap.started -= instance.OnTap;
             @tap.performed -= instance.OnTap;
             @tap.canceled -= instance.OnTap;
+            @turn.started -= instance.OnTurn;
+            @turn.performed -= instance.OnTurn;
+            @turn.canceled -= instance.OnTurn;
         }
 
         public void RemoveCallbacks(IPlayActions instance)
@@ -163,5 +247,6 @@ public partial class @MainControl: IInputActionCollection2, IDisposable
     public interface IPlayActions
     {
         void OnTap(InputAction.CallbackContext context);
+        void OnTurn(InputAction.CallbackContext context);
     }
 }

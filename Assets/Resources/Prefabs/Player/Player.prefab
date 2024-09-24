@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 5590140797127130505}
+  yPosFromMaxHeight: -3
 --- !u!1 &7518708934649248133
 GameObject:
   m_ObjectHideFlags: 0

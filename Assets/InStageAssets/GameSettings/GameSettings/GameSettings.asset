@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede114e54dfc13142a1cadd20dff829d, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  spawnHeightMin: 2
+  spawnHeightMin: 1
   spawnDistanceToTop: 0.2
   worldPrefab: {fileID: 5138188728302779216, guid: 3a0cb4ffa560c6943b4ff9723d07d19a, type: 3}
   player: {fileID: 3048394301915974420, guid: 32e46aa41d627b6498631b773fd7ef33, type: 3}

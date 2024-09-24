@@ -153,7 +153,11 @@ namespace WAK.Managers
         {
             highestObject = nextHighestObject;
             CurrentTopHeight = Mathf.Max(CurrentTopHeight, highestObject.TopPositionY);
-            Score = CurrentTopHeight; // 우선 최고 높이 기준으로 스코어 측정
+            if(Score < CurrentTopHeight)
+            {// 우선 최고 높이 기준으로 스코어 측정
+                Score = CurrentTopHeight; 
+            }
+            
             Debug.Log($"[Game] New TOP Height : {CurrentTopHeight}");
             gameDataListeners.ForEach(listener => listener.OnUpdate());
         }

@@ -102,6 +102,7 @@ namespace WAK.Managers
         }
 
         #endregion
+         
 
         public void Show<T>() where T : View
         {

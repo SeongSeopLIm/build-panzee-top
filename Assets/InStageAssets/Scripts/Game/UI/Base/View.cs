@@ -33,6 +33,7 @@ namespace WAK.UI
     internal interface IViewHandler
     {
         void Initialize(ViewData viewData);
+        void Clear();
     } 
 
     internal interface IVisibleUpdater
@@ -62,11 +63,22 @@ namespace WAK.UI
             ViewID = viewID;
         }
 
+        protected virtual void OnShow()
+        {
+
+        }
+
+        protected virtual void OnHide()
+        {
+
+        }
+
         #region UI view animation
 
         private void OnFinishTranslationToShow()
         {
             state.Value = ViewState.Hidden;
+            OnHide();
         }
 
         private void OnFinishTranslationToHide()
@@ -76,6 +88,7 @@ namespace WAK.UI
         private void OnStartTranslationToShow()
         {
             state.Value = ViewState.StartTranslationToShow;
+            OnShow();
         }
 
         private void OnStartTranslationToHide()
@@ -100,12 +113,14 @@ namespace WAK.UI
         void IVisibleUpdater.Show()
         {
             state.Value = ViewState.Show;
+            OnShow();
             Debug.Log($"[UI] Show View : {ViewID}");
         }
 
         void IVisibleUpdater.Hide()
         {
             state.Value = ViewState.Hidden;
+            OnHide();
             Debug.Log($"[UI] Hide View : {ViewID}");
         }
         #endregion
@@ -118,6 +133,7 @@ namespace WAK.UI
     public class View : MonoBehaviour, IViewHandler
     { 
         protected ViewData viewData { get; private set; }
+        protected CompositeDisposable disposable = new CompositeDisposable();
 
         private void Awake()
         {
@@ -128,6 +144,11 @@ namespace WAK.UI
         {
             OnSetData(viewData);
             OnInitilized();
+        }
+        void IViewHandler.Clear()
+        {
+            disposable?.Clear();
+            OnClear();
         }
 
         /// <summary>
@@ -146,6 +167,9 @@ namespace WAK.UI
 
         }
 
+        protected virtual void OnClear()
+        {
+        }
 
         protected virtual void OnSetData(ViewData viewData) 
         {

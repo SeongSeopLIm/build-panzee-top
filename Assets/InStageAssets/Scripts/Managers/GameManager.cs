@@ -2,16 +2,22 @@
 using UnityEngine;
 using UnityCommunity.UnitySingleton;
 using WAK.Game;
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
+using System.Collections.Generic;
+
 namespace WAK.Managers
 {
+    public interface IGameDataListener
+    {
+        // REVIEW : 우선 그냥 싱글톤에서 알아서 찾는 방향으로. 불편하면 그때 게임데이터 넘겨주는 방식 전환
+        void OnUpdate();
+    }
 
     public class GameManager : MonoSingleton<GameManager>
     {
         public GameSettings GameSettings{ get; private set; }
         public GamePlayerController PlayerController { get; private set; }
-        public MainControl MainControls { get; private set; } 
-
+        public MainControl MainControls { get; private set; }  
         public Camera MainCamera => player.PlayerCamera;
 
         #region GameLiveData
@@ -20,8 +26,9 @@ namespace WAK.Managers
 
         private WakHeadImpl highestObject;
         private WakHeadImpl currentHoldingObject;
-        public float CurrentTopHeight { get; private set; } = 0;
 
+        public float Score { get; private set; } = 0;
+        public float CurrentTopHeight { get; private set; } = 0; 
         public bool IsHoldingObject => currentHoldingObject != null; 
         #endregion
 
@@ -45,8 +52,9 @@ namespace WAK.Managers
         {
             currentHoldingObject = null;
             CurrentTopHeight = 0;
+            Score = 0;
             // 쩝 게임로직은 일단 대충해보자. 
-            if(world)
+            if (world)
             {
                 Destroy(world);
             }
@@ -70,7 +78,8 @@ namespace WAK.Managers
         {
             ObjectManager.Instance.Clear();
             currentHoldingObject = null;
-            CurrentTopHeight = 0; 
+            CurrentTopHeight = 0;
+            Score = 0;
             PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Play>(PlayerController)); 
             SpawnRandomAndHold(Vector2.zero);
         }
@@ -79,7 +88,18 @@ namespace WAK.Managers
         {
             PlayerController.InputStateMachine.SwitchState(StateBase.GetOrCreate<InputState_Wait>(PlayerController)); 
         }
-         
+
+
+        // NOTE : 끽해야 1~2개 리슨할 것임으로 리스트로 작성. 
+        List<IGameDataListener> gameDataListeners = new List<IGameDataListener>();
+        public void AddDataListener(IGameDataListener listener)
+        { 
+            gameDataListeners.Add(listener);
+        }
+        public void RemoveDataListener(IGameDataListener listener)
+        {
+            gameDataListeners.Remove(listener);
+        }
 
         public void SpawnRandomAndHold(Vector2 screenPos)
         {
@@ -133,7 +153,9 @@ namespace WAK.Managers
         {
             highestObject = nextHighestObject;
             CurrentTopHeight = Mathf.Max(CurrentTopHeight, highestObject.TopPositionY);
+            Score = CurrentTopHeight; // 우선 최고 높이 기준으로 스코어 측정
             Debug.Log($"[Game] New TOP Height : {CurrentTopHeight}");
+            gameDataListeners.ForEach(listener => listener.OnUpdate());
         }
 
         public void CheckRespawn()

@@ -1,5 +1,6 @@
 ﻿
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WAK.Managers;
@@ -14,6 +15,7 @@ namespace WAK.UI
     [UIView(id: nameof(ResultMainWindow), path: "Prefabs/UI/ResultMainWindow", dataType: typeof(ResultMainWindowData))]
     public class ResultMainWindow : Window
     {
+        [SerializeField] private TMP_Text scoreText;
         [SerializeField] private Button restartBtn;
         [SerializeField] private Button toLobbyBtn;
 
@@ -27,6 +29,7 @@ namespace WAK.UI
         protected override void OnSetData(ViewData viewData)
         {
             base.OnSetData(viewData);
+            scoreText.text = $"SCORE : {GameManager.Instance.Score}";
         }
         private void OnClickToLobbyBtn()
         {

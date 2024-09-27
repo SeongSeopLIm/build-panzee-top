@@ -16,14 +16,14 @@ MonoBehaviour:
   spawnBundleDatas:
   - spawnPrefab: {fileID: 412656860345265935, guid: ea0e87ffa4c07e841b9cfe9c94b99f9f, type: 3}
     Size: {x: 1.2, y: 1.2}
-    probabilityCount: 1
+    probabilityCount: 0
   - spawnPrefab: {fileID: 412656860345265935, guid: 13be76bd01d43b841861032f9ff49fb7, type: 3}
     Size: {x: 0.9611328, y: 1.406}
     probabilityCount: 4
   - spawnPrefab: {fileID: 412656860345265935, guid: 04bf7efdd2bf74f47bda91c0b941d67b, type: 3}
     Size: {x: 1.792, y: 1.792}
     probabilityCount: 1
-  - spawnPrefab: {fileID: 412656860345265935, guid: 75aaef023bc7a2141a6da93e42da6b30, type: 3}
+  - spawnPrefab: {fileID: 5138188728302779216, guid: 3a0cb4ffa560c6943b4ff9723d07d19a, type: 3}
     Size: {x: 1.6, y: 1.478125}
     probabilityCount: 3
   - spawnPrefab: {fileID: 412656860345265935, guid: 234a0945de881d549abfa38afb3e7375, type: 3}

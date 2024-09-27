@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Drawing;
+using System.Linq;
 
 namespace WAK.Game
 {
@@ -27,6 +28,7 @@ namespace WAK.Game
 
         // 캐시된 누적 확률 리스트
         private List<int> cumulativeProbabilities = new List<int>();
+        private int totalCumulativeProbabilities = 0;
 
         public string PrefabFolderPath => prefabFolderPath;
         public List<SpawnBundleData> SpawnBundleDatas => spawnBundleDatas;
@@ -40,15 +42,19 @@ namespace WAK.Game
                 cumulative += data.probabilityCount;
                 cumulativeProbabilities.Add(cumulative);
             }
+            totalCumulativeProbabilities = cumulativeProbabilities.Max();
         }
 
         public int GetTotalProbability()
         {
-            if (cumulativeProbabilities.Count != spawnBundleDatas.Count)
+            if (cumulativeProbabilities.Count != spawnBundleDatas.Count ||
+                cumulativeProbabilities.Count == 0 ||
+                totalCumulativeProbabilities == 0)
+            {
                 UpdateCumulativeProbabilities();
-            if (cumulativeProbabilities.Count > 0)
-                return cumulativeProbabilities[cumulativeProbabilities.Count - 1];
-            return 0;
+            }
+                 
+            return totalCumulativeProbabilities;
         }
 
         public int GetSelectedIndex(int randomValue)

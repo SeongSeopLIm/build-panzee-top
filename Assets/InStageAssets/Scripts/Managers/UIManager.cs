@@ -21,7 +21,7 @@ namespace WAK.Managers
     public class UIManager : PersistentMonoSingleton<UIManager>
     { // 고도화 없이 간단하게 페이지단위로 작성
         private GameObject disabledRoot;
-        private GameObject activeRoot; // 우선 UI오더 고려 없이 제작. 
+        [SerializeField] private GameObject activeRoot; // 우선 UI오더 고려 없이 제작. 
 
         private Dictionary<string, ViewData> viewDataByID = new();
         private Dictionary<int, View> viewByInstanceID = new();
@@ -38,13 +38,13 @@ namespace WAK.Managers
             rt.anchorMax = Vector2.one;
             disabledRoot.SetActive(false);
 
-            activeRoot = new GameObject("activeRoot");
-            rt = activeRoot.AddComponent<RectTransform>();
-            rt.SetParent(gameObject.transform);
-            rt.localPosition = Vector3.zero;
-            rt.localScale = Vector3.one;
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.one;
+            //activeRoot = new GameObject("activeRoot");
+            //rt = activeRoot.AddComponent<RectTransform>();
+            //rt.SetParent(gameObject.transform);
+            //rt.localPosition = Vector3.zero;
+            //rt.localScale = Vector3.one;
+            //rt.anchorMin = Vector2.zero;
+            //rt.anchorMax = Vector2.one;
             activeRoot.SetActive(true);
 
 
@@ -120,10 +120,11 @@ namespace WAK.Managers
         { 
             if (viewDataByID.TryGetValue(viewID, out ViewData viewData))
             {
-                var viewTransfrom = viewByInstanceID[viewData.HandleInstanceID].gameObject.transform;
+                viewByInstanceID[viewData.HandleInstanceID].gameObject.TryGetComponent<RectTransform>(out var viewTransfrom);
                 viewTransfrom.SetParent(activeRoot.transform);
                 viewTransfrom.localPosition = Vector3.zero;
                 viewTransfrom.localScale = Vector3.one;
+                viewTransfrom.sizeDelta = Vector3.zero;
 
                 (viewData as IVisibleUpdater).Show();
             }

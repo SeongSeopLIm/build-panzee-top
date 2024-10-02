@@ -74,16 +74,19 @@ namespace WAK.Managers
 
             AudioClip bgmClip = Resources.Load<AudioClip>(path);
 
-            if (bgmClip != null)
-            {
-                BGMSource.clip = bgmClip;
-                BGMSource.loop = true; // BGM은 반복 재생
-                BGMSource.Play();
-            }
-            else
+            if (!bgmClip)
             {
                 Debug.LogError($"Resources에서 경로 '{path}'로 BGM을 찾을 수 없습니다.");
+                return;
+            } 
+            if (BGMSource.clip == bgmClip)
+            {
+                Debug.Log("같은 음악 재생 무시처리");
+                return;
             }
+            BGMSource.clip = bgmClip;
+            BGMSource.loop = true; // BGM은 반복 재생
+            BGMSource.Play();
         }
 
         public void PlaySFX(AudioClipType sfxType)

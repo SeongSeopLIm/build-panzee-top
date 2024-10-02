@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,8 +25,9 @@ namespace WAK
         [System.Serializable]
         private class SoundEffectData
         {
-            public AudioClipType HoverSFXKey;
-            public AudioClipType InteractSFXKey;
+            // TODO : AudioClipType 를 받되, 에디터 스크립트 추가해서 인스펙터에서 enum지정하도록. 프리팹 저장은 string으로 되도록.
+            public string HoverSFXKey;
+            public string InteractSFXKey;
         }
 
         [SerializeField] private bool scaleEffect = true;
@@ -56,7 +58,14 @@ namespace WAK
 
             if(soundEffect)
             {
-                AudioManager.Instance.PlaySFX(soundEffectData.HoverSFXKey);
+                if(Enum.TryParse<AudioClipType>(soundEffectData.HoverSFXKey, out var clipType))
+                {
+                    AudioManager.Instance.PlaySFX(clipType);
+                }
+                else
+                {
+                    Debug.LogError($"{soundEffectData.HoverSFXKey}를 찾을 수 없습니다.");
+                } 
             }
         }
 
@@ -74,7 +83,14 @@ namespace WAK
         {
             if (soundEffect)
             {
-                AudioManager.Instance.PlaySFX(soundEffectData.InteractSFXKey);
+                if (Enum.TryParse<AudioClipType>(soundEffectData.InteractSFXKey, out var clipType))
+                {
+                    AudioManager.Instance.PlaySFX(clipType);
+                }
+                else
+                {
+                    Debug.LogError($"{soundEffectData.HoverSFXKey}를 찾을 수 없습니다.");
+                } 
             }
         }
     }

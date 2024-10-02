@@ -27,6 +27,8 @@ namespace WAK.Core
             int targetHeight = Mathf.Max(Screen.height, height);
 
             Screen.SetResolution(targetWidth, targetHeight, true);
+            Application.targetFrameRate = 144;
+
         }
 
         protected override void OnInitialized()

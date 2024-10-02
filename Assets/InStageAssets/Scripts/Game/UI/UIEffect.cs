@@ -47,11 +47,16 @@ namespace WAK
                 Debug.LogWarning("Selectable 찾을 수 없음.");
             }
         }
+        private void OnEnable()
+        {
+            transform.localScale = Vector3.one;
+        }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
             if(scaleEffect)
             {
+                DOTween.Kill(GetInstanceID());
                 transform.DOScale(scaleEffectData.FocusScale, scaleEffectData.Duration)
                     .SetId(GetInstanceID());
             }

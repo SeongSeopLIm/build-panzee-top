@@ -15,6 +15,7 @@ namespace WAK.Managers
         public float BGMVolume => BGMSource.volume;
         public float SFXVolume { get; private set; } = 1f;
 
+        private Dictionary<AudioClipType, AudioClip> clipByID = new Dictionary<AudioClipType, AudioClip>();
         private Queue<AudioSource> sfxPool = new Queue<AudioSource>();
         private int poolSize = 50; 
 
@@ -69,22 +70,25 @@ namespace WAK.Managers
                 return;
             }
 
-            string bgmKey = bgmType.ToString().Substring(4); // "BGM_" 제거
-            string path = $"Audio/BGM/{bgmKey}";
-
-            AudioClip bgmClip = Resources.Load<AudioClip>(path);
-
-            if (!bgmClip)
+            if(!clipByID.TryGetValue(bgmType, out var clip))
             {
-                Debug.LogError($"Resources에서 경로 '{path}'로 BGM을 찾을 수 없습니다.");
+                string bgmKey = bgmType.ToString().Substring(4); // "BGM_" 제거
+                string path = $"Audio/BGM/{bgmKey}";
+
+                clip = Resources.Load<AudioClip>(path);
+            }
+
+            if (!clip)
+            {
+                Debug.LogError($"Resources에서 경로 '{bgmType}'로 BGM을 찾을 수 없습니다.");
                 return;
             } 
-            if (BGMSource.clip == bgmClip)
+            if (BGMSource.clip == clip)
             {
                 Debug.Log("같은 음악 재생 무시처리");
                 return;
             }
-            BGMSource.clip = bgmClip;
+            BGMSource.clip = clip;
             BGMSource.loop = true; // BGM은 반복 재생
             BGMSource.Play();
         }
@@ -102,22 +106,25 @@ namespace WAK.Managers
                 AudioSource sfxSource = sfxPool.Dequeue();
                 sfxSource.gameObject.SetActive(true);
 
-                string sfxKey = sfxType.ToString().Substring(4); // "SFX_" 제거
-                string path = $"Audio/SFX/{sfxKey}";
-
-                AudioClip sfxClip = Resources.Load<AudioClip>(path);
-
-                if (sfxClip != null)
+                if (!clipByID.TryGetValue(sfxType, out var clip))
                 {
-                    sfxSource.clip = sfxClip;
+                    string sfxKey = sfxType.ToString().Substring(4); // "SFX_" 제거
+                    string path = $"Audio/SFX/{sfxKey}";
+
+                    clip = Resources.Load<AudioClip>(path);
+                }
+
+                if (clip != null)
+                {
+                    sfxSource.clip = clip;
                     sfxSource.volume = SFXVolume;
                     sfxSource.Play();
 
-                    ReturnSFXToPoolAsync(sfxSource, sfxClip.length).Forget();
+                    ReturnSFXToPoolAsync(sfxSource, clip.length).Forget();
                 }
                 else
                 {
-                    Debug.LogError($"Resources에서 경로 '{path}'로 SFX를 찾을 수 없습니다.");
+                    Debug.LogError($"Resources에서 경로 '{sfxType}'로 SFX를 찾을 수 없습니다.");
                     sfxPool.Enqueue(sfxSource);
                     sfxSource.gameObject.SetActive(false);
                 }

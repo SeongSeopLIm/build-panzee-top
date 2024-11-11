@@ -50,6 +50,7 @@ namespace WAK.Core
 
             #region PersistentMonoSingleton
             Managers.UnityGameSceneManager.CreateInstance(); 
+            MultiplayManager.CreateInstance();
             #endregion 
         } 
 

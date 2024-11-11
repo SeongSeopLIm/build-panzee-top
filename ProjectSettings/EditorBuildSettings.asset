@@ -12,3 +12,4 @@ EditorBuildSettings:
     path: Assets/InStageAssets/Scenes/scene_lobby_and_game.unity
     guid: a47d8e7f1f39d8b4d9bdbc96c85ab196
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

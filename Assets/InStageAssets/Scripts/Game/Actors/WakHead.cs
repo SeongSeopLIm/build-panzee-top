@@ -10,13 +10,13 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 namespace WAK.Game
 {
     /// <summary>
-    /// À§Ä¡°ªÀ» °®´Â ¿ùµå»óÀÇ ¿ÀºêÁ§Æ® 
+    /// ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® 
     /// </summary>
     [ActorImpl(actorID: "WakHead", prefabRelativePath: "/WakHead.prefab"),
         RequireComponent(typeof(SpriteRenderer), typeof(PolygonCollider2D), typeof(Rigidbody2D))]
     public class WakHead : Actor
     {
-        // rigidbody2D ÀÌ¸§ÀÌ ¾ÈµÇ´Âµ¥ ¸ðÂ¡? ¿ø·¡ ±×·± °Ç°¡
+        // rigidbody2D ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ÈµÇ´Âµï¿½ ï¿½ï¿½Â¡? ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ ï¿½Ç°ï¿½
         [SerializeField] private Rigidbody2D _rigidbody2D; 
         [SerializeField] private SpriteRenderer spriteRenderer; 
         [SerializeField] private Collider2D _collider2D;
@@ -104,8 +104,8 @@ namespace WAK.Game
         private void CheckIsMoving()
         {
             var filter = new ContactFilter2D() { layerMask = gameObject.layer }; 
-            // TODO : Ã¼Å© ¹æ½Ä ¼öÁ¤ ÇÊ¿ä. 
-            if (_rigidbody2D.velocity.sqrMagnitude > 0.1 ||
+            // TODO : Ã¼Å© ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½. 
+            if (_rigidbody2D.linearVelocity.sqrMagnitude > 0.1 ||
                 Mathf.Abs(_rigidbody2D.angularVelocity) > 0.1 ||
                 !_collider2D.IsTouching(filter))
             {
